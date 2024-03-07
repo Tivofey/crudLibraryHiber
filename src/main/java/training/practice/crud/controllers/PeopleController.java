@@ -39,19 +39,20 @@ public class PeopleController {
     @GetMapping("/{person_id}")
     public String show(@PathVariable("person_id") int person_id, Model model) {
         model.addAttribute("person", peopleService.findOne(person_id));
-        model.addAttribute("books", bookService.showBooks(peopleService.findOne(person_id)));
+        model.addAttribute("books",
+                bookService.showBooksWithDelay(bookService.showBooks(peopleService.findOne(person_id))));
         return "people/show";
     }
 
     @GetMapping("/new")
-    public String newPerson(Model model){
+    public String newPerson(Model model) {
         model.addAttribute("person", new Person());
         return "people/new";
     }
 
     @PostMapping()
     public String create(@ModelAttribute("person") @Valid Person person,
-                         BindingResult bindingResult){
+                         BindingResult bindingResult) {
         personValidator.validate(person, bindingResult);
 
         if (bindingResult.hasErrors())
@@ -63,7 +64,7 @@ public class PeopleController {
 
     @GetMapping("/{person_id}/edit")
     public String edit(@PathVariable("person_id") int person_id,
-                       Model model){
+                       Model model) {
         model.addAttribute("person", peopleService.findOne(person_id));
         return "people/edit";
     }
@@ -71,7 +72,7 @@ public class PeopleController {
     @PatchMapping("/{person_id}")
     public String saveEdit(@PathVariable("person_id") int person_id,
                            @ModelAttribute("person") @Valid Person person,
-                           BindingResult bindingResult){
+                           BindingResult bindingResult) {
         person.setPersonId(person_id);
         personValidatorForEdit.validate(person, bindingResult);
 
@@ -83,7 +84,7 @@ public class PeopleController {
     }
 
     @DeleteMapping("{person_id}")
-    public String delete(@PathVariable("person_id") int person_id){
+    public String delete(@PathVariable("person_id") int person_id) {
         peopleService.delete(person_id);
         return "redirect:/people";
     }

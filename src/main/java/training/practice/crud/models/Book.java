@@ -4,6 +4,7 @@ import javax.persistence.*;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(name = "book")
@@ -30,6 +31,16 @@ public class Book {
     @ManyToOne
     @JoinColumn(name = "person", referencedColumnName = "person_id")
     private Person reader;
+
+    @Column(name = "taken_at")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createdAt;
+
+    @Transient
+    private boolean FLAG;
+
+    @Transient
+    private final int DELAY = 10; // delay in the delivery of the book in minutes
 
     public Book(int bookID, String title, String author, int year) {
         this.bookID = bookID;
@@ -79,6 +90,26 @@ public class Book {
 
     public void setReader(Person reader) {
         this.reader = reader;
+    }
+
+    public Date getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Date createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public boolean getFLAG() {
+        return FLAG;
+    }
+
+    public void setFLAG(boolean FLAG) {
+        this.FLAG = FLAG;
+    }
+
+    public int getDELAY() {
+        return DELAY;
     }
 
     @Override

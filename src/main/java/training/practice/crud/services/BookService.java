@@ -9,6 +9,7 @@ import training.practice.crud.models.Book;
 import training.practice.crud.models.Person;
 import training.practice.crud.repositories.BookRepository;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -70,6 +71,18 @@ public class BookService {
         return bookRepository.findAllByReader(person);
     }
 
+    public List<Book> showBooksWithDelay(List<Book> array){
+        Date date = new Date();
+
+        for (Book book : array){
+            long duration = date.getTime() - book.getCreatedAt().getTime();
+            if (duration > book.getDELAY() * 60000) book.setFLAG(true);
+                else book.setFLAG(false);
+        }
+
+        return array;
+    }
+
     public Person showPerson(int bookId){
         Optional<Book> book = bookRepository.findById(bookId);
         return book.orElse(null).getReader();
@@ -85,6 +98,7 @@ public class BookService {
     public void choosePerson(int bookId, int personId){
         Book book = bookRepository.findById(bookId).get();
         book.setReader(peopleService.findOne(personId));
+        book.setCreatedAt(new Date());
     }
 
     public List<Book> findAllByTitleStartingWith(String titleForSearch){

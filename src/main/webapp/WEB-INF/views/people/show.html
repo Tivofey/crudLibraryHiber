@@ -12,7 +12,10 @@
     <hr>
     <a style="font-weight: bold">Books:</a>
     <div th:each="book : ${books}">
-        <a th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">Text</a>
+        <a th:if="${book.getFLAG() == true}" style="color: red"
+           th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">Text</a>
+        <a th:unless="${book.getFLAG() == true}"
+           th:text="${book.getTitle() + ', ' + book.getAuthor() + ', ' + book.getYear()}">Text</a>
     </div>
 </div>
 
